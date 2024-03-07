@@ -111,6 +111,10 @@ This downloads and tokenizes the [OpenWebText](https://huggingface.co/datasets/o
 torchrun --standalone --nproc_per_node=8 train.py config/train_gpt2.py
 ```
 
+p4d.24xlarge On Demand $32.7726 Spot $10.0731
+
+Will cost between 1k and 3k dollars.
+
 This will run for about 4 days using PyTorch Distributed Data Parallel (DDP) and go down to loss of ~2.85. Now, a GPT-2 model just evaluated on OWT gets a val loss of about 3.11, but if you finetune it it will come down to ~2.85 territory (due to an apparent domain gap), making the two models ~match.
 
 If you're in a cluster environment and you are blessed with multiple GPU nodes you can make GPU go brrrr e.g. across 2 nodes like:
