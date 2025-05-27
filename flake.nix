@@ -142,6 +142,9 @@
             mkdir -p $out
             # copy the trained model and logs
             cp -r out-shakespeare-char/* $out/
+            # also copy the meta.pkl file needed for inference
+            mkdir -p $out/data/shakespeare_char
+            cp data/shakespeare_char/meta.pkl $out/data/shakespeare_char/
         '';
       };
   in
