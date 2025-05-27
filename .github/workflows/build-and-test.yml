@@ -1,0 +1,35 @@
+name: Build and Test nanoGPT
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Install Nix
+      uses: cachix/install-nix-action@v22
+      with:
+        install_url: https://releases.nixos.org/nix/nix-2.18.1/install
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          accept-flake-config = true
+    
+    - name: Build the model
+      run: nix build -L
+    
+    - name: Run inference
+      run: |
+        echo "Running inference on the trained model..."
+        
+        # Run inference using the trained model from the build output
+        nix develop -c python sample.py --out_dir=result --device=cpu --num_samples=2 --max_new_tokens=100 --compile=False
+        
+        echo "Inference completed successfully!"
