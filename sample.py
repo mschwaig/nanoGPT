@@ -20,6 +20,7 @@ seed = 1337
 device = 'cuda' # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1', etc.
 dtype = 'bfloat16' if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else 'float16' # 'float32' or 'bfloat16' or 'float16'
 compile = False # use PyTorch 2.0 to compile the model to be faster
+meta_path = '' # use default meta path we get from torch later
 exec(open('configurator.py').read()) # overrides from command line or config file
 # -----------------------------------------------------------------------------
 
@@ -56,7 +57,8 @@ if compile:
 # look for the meta pickle in case it is available in the dataset folder
 load_meta = False
 if init_from == 'resume' and 'config' in checkpoint and 'dataset' in checkpoint['config']: # older checkpoints might not have these...
-    meta_path = os.path.join('data', checkpoint['config']['dataset'], 'meta.pkl')
+    if not meta_path:
+        meta_path = os.path.join('data', checkpoint['config']['dataset'], 'meta.pkl')
     load_meta = os.path.exists(meta_path)
 if load_meta:
     print(f"Loading meta from {meta_path}...")
