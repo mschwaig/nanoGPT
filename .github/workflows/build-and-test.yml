@@ -30,6 +30,6 @@ jobs:
         echo "Running inference on the trained model..."
         
         # Run inference using the trained model from the build output
-        nix develop -c python sample.py --out_dir=result --device=cpu --num_samples=2 --max_new_tokens=100 --compile=False
+        nix develop -c python sample.py --out_dir=result  --meta_path=result/meta.pkl  --device=cpu --num_samples=2 --max_new_tokens=100 --compile=False
         
         echo "Inference completed successfully!"

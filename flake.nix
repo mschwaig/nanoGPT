@@ -156,8 +156,7 @@
       buildInputs = [ inferencePythonEnv ];
       shellHook = ''
         echo "python environment for inference ready"
-        echo "`nix build` command symlinks training result into result/ folder"
-        echo "use (-L flag to see logs)"
+        echo "use `nix build` command to symlink training result into result/ folder"
       '';
     };
   };
