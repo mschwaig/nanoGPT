@@ -112,6 +112,8 @@
         # see https://pytorch.org/docs/stable/notes/randomness.html
         # TODO: add GPU support
         # see https://github.com/NixOS/nixpkgs/pull/256230 and related efforts
+        # TODO: add meta attribute to describe types of ML operations
+        # see: https://nixos.org/manual/nixpkgs/stable/#chap-meta
         buildPhase = ''
             # copy the filtered training data
             mkdir -p data/shakespeare_char
