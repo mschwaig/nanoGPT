@@ -57,7 +57,7 @@
             # we need to replace those paths relative to source
             # because store paths in which our code runs are not writable
             substituteInPlace prepare.py \
-              --replace "os.path.dirname(__file__)" "'$PWD'"
+              --replace-fail "os.path.dirname(__file__)" "'$PWD'"
         '';
         buildPhase = ''
             # add input data in expected place
@@ -74,35 +74,27 @@
             cp meta.pkl $out/
         '';
       };
-    outlier-removal = pkgs.stdenv.mkDerivation {
-        name = "shakespeare-outlier-removal";
-        src = ./data/shakespeare_char;
+    outlier-removal = pkgs.runCommand
+    "shakespeare-outlier-removal" {
         buildInputs = [
           (pkgs.python3.withPackages (ps: with ps; [
             numpy
           ]))
         ];
-        postPatch = ''
-            # fix paths to work in build directory
-            substituteInPlace remove_outliers.py \
-              --replace "os.path.dirname(__file__)" "'$PWD'"
-        '';
-        buildPhase = ''
-            # copy preprocessed data from previous step
-            cp ${pre-processing}/train.bin .
-            cp ${pre-processing}/val.bin .
-            cp ${pre-processing}/meta.pkl .
-            
-            # remove outliers from the tokenized data
-            python remove_outliers.py
-        '';
-        installPhase = ''
-            mkdir -p $out
-            cp train_filtered.bin $out/train.bin
-            cp val_filtered.bin $out/val.bin
-            cp meta_filtered.pkl $out/meta.pkl
-        '';
-      };
+      } ''
+        # copy preprocessed data from previous step
+        cp ${pre-processing}/train.bin .
+        cp ${pre-processing}/val.bin .
+        cp ${pre-processing}/meta.pkl .
+
+        # remove outliers from the tokenized data
+        python ${./additional_preprocessing/remove_outliers.py}
+
+        mkdir -p $out
+        cp train_filtered.bin $out/train.bin
+        cp val_filtered.bin $out/val.bin
+        cp meta_filtered.pkl $out/meta.pkl
+      '';
 
     training = pkgs.stdenv.mkDerivation {
         name = "shakespeare-char-training";

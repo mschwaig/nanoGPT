@@ -7,11 +7,11 @@ import numpy as np
 import pickle
 
 # load the preprocessed data
-train_ids = np.fromfile(os.path.join(os.path.dirname(__file__), 'train.bin'), dtype=np.uint16)
-val_ids = np.fromfile(os.path.join(os.path.dirname(__file__), 'val.bin'), dtype=np.uint16)
+train_ids = np.fromfile('train.bin', dtype=np.uint16)
+val_ids = np.fromfile('val.bin', dtype=np.uint16)
 
 # load metadata
-with open(os.path.join(os.path.dirname(__file__), 'meta.pkl'), 'rb') as f:
+with open('meta.pkl', 'rb') as f:
     meta = pickle.load(f)
 
 # simple outlier removal: filter out tokens > 60
